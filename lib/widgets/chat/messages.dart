@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_complete_guide/widgets/chat/message_bubble.dart';
 
 class Messages extends StatelessWidget {
+  QuerySnapshot cache;
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -16,6 +17,7 @@ class Messages extends StatelessWidget {
           );
         }
         return StreamBuilder(
+            initialData: cache,
             stream: Firestore.instance
                 .collection('chat')
                 .orderBy(
@@ -29,7 +31,8 @@ class Messages extends StatelessWidget {
                   child: CircularProgressIndicator(),
                 );
               }
-              final chatDocs = chatSnapshot.data.documents;
+              cache = chatSnapshot.data;
+              final chatDocs = cache.documents;
               return ListView.builder(
                 reverse: true,
                 itemCount: chatDocs.length,
