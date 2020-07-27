@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 
 class NewMessage extends StatefulWidget {
   @override
@@ -14,7 +15,33 @@ class _NewMessageState extends State<NewMessage> {
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
     final user = await FirebaseAuth.instance.currentUser();
-    final userData = await Firestore.instance.collection('users').document(user.uid).get();
+    final userData =
+        await Firestore.instance.collection('users').document(user.uid).get();
+    final lastMessage = Firestore.instance
+        .collection('chat')
+        .orderBy('createdAt', descending: true)
+        .limit(1);
+    final snap = await lastMessage.getDocuments();
+    if (snap.documents.length == 0)
+      Firestore.instance.collection('chat').add({
+        'text': 'timeStampMarker',
+        'createdAt': Timestamp.now(),
+        'userId': user.uid,
+        'username': userData['username'],
+        'userImage': userData['image_url']
+      });
+    else {
+      final timeLast = snap.documents[0]['createdAt'];
+      if (DateFormat.yMd().format(timeLast.toDate()) !=
+          DateFormat.yMd().format(DateTime.now()))
+        Firestore.instance.collection('chat').add({
+          'text': 'timeStampMarker',
+          'createdAt': Timestamp.now(),
+          'userId': user.uid,
+          'username': userData['username'],
+          'userImage': userData['image_url']
+        });
+    }
     Firestore.instance.collection('chat').add({
       'text': _enteredMessage,
       'createdAt': Timestamp.now(),
