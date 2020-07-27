@@ -33,6 +33,8 @@ class Messages extends StatelessWidget {
               }
               cache = chatSnapshot.data;
               final chatDocs = cache.documents;
+              final width = MediaQuery.of(context).size.width * 0.3;
+              print(width);
               return ListView.builder(
                 reverse: true,
                 itemCount: chatDocs.length,
@@ -41,6 +43,8 @@ class Messages extends StatelessWidget {
                   chatDocs[index]['username'],
                   chatDocs[index]['userImage'],
                   chatDocs[index]['userId'] == futureSnapshot.data.uid,
+                  chatDocs[index]['createdAt'],
+                  width,
                   key: ValueKey(chatDocs[index].documentID),
                 ),
               );
