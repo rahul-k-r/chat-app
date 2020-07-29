@@ -16,13 +16,13 @@ class _ChatScreenState extends State<ChatScreen> {
     final fbm = FirebaseMessaging();
     fbm.requestNotificationPermissions();
     fbm.configure(onMessage: (msg) {
-      print(msg);
+      if (msg['notification']['body'] != 'timeStampMarker') print(msg);
       return;
     }, onLaunch: (msg) {
-      print(msg);
+      if (msg['notification']['body'] != 'timeStampMarker') print(msg);
       return;
     }, onResume: (msg) {
-      print(msg);
+      if (msg['notification']['body'] != 'timeStampMarker') print(msg);
       return;
     });
     fbm.subscribeToTopic('chat');
@@ -32,7 +32,7 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FlutterChat'),
+        title: Text('GroupChat'),
         actions: [],
       ),
       body: Container(

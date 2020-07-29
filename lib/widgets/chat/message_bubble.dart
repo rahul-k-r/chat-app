@@ -10,7 +10,8 @@ class MessageBubble extends StatelessWidget {
     this.userImage,
     this.isMe,
     this.createdAt,
-    this.width, {
+    this.width,
+    this.count, {
     this.key,
   });
 
@@ -21,6 +22,7 @@ class MessageBubble extends StatelessWidget {
   final createdAt;
   final double width;
   final bool isMe;
+  final bool count;
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +36,8 @@ class MessageBubble extends StatelessWidget {
               userName: userName,
               createdAt: createdAt,
               message: message,
-              userImage: userImage),
+              userImage: userImage,
+              count: count),
     );
   }
 }
@@ -45,18 +48,17 @@ class TimeStampDenoter extends StatelessWidget {
   final DateTime _timenow;
 
   int _timeCompare() {
-    if (DateFormat.yM().format(_timenow) !=
-        DateFormat.yM().format(DateTime.now()))
+    int days = DateTime.now().difference(_timenow).inDays;
+    if (days > 1)
       return -1;
     else
-      return int.parse(DateFormat.d().format(DateTime.now())) -
-          int.parse(DateFormat.d().format(_timenow));
+      return days;
   }
 
   String _valueShown() {
     final _comparison = _timeCompare();
-    if (_comparison == -1 || _comparison > 2)
-      return DateFormat.MMMMd().format(_timenow);
+    if (_comparison == -1)
+      return DateFormat.yMMMMd().format(_timenow);
     else if (_comparison == 1)
       return 'YESTERDAY';
     else
@@ -66,6 +68,9 @@ class TimeStampDenoter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Bubble(
+      margin: BubbleEdges.only(
+        top: 10,
+      ),
       alignment: Alignment.center,
       color: Color.fromRGBO(212, 234, 244, 1.0),
       child: Text(
@@ -86,6 +91,7 @@ class MessageStack extends StatelessWidget {
     @required this.createdAt,
     @required this.message,
     @required this.userImage,
+    @required this.count,
   }) : super(key: key);
 
   final bool isMe;
@@ -94,93 +100,78 @@ class MessageStack extends StatelessWidget {
   final Timestamp createdAt;
   final String message;
   final String userImage;
+  final bool count;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Bubble(
-          color: isMe ? Colors.grey[300] : Theme.of(context).accentColor,
-          alignment: isMe ? Alignment.topRight : Alignment.topLeft,
-          nip: isMe ? BubbleNip.rightTop : BubbleNip.leftTop,
-          margin: isMe
-              ? BubbleEdges.only(top: 10, left: width)
-              : BubbleEdges.only(top: 10, right: width),
-          elevation: 1,
-          child: Column(
-            crossAxisAlignment:
-                isMe ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+    return Bubble(
+      color: isMe ? Colors.grey[300] : Theme.of(context).accentColor,
+      alignment: isMe ? Alignment.topRight : Alignment.topLeft,
+      nip: count ? BubbleNip.no : isMe ? BubbleNip.rightTop : BubbleNip.leftTop,
+      margin: isMe
+          ? BubbleEdges.only(top: count ? 3 : 10, left: width)
+          : BubbleEdges.only(top: count ? 2 : 10, right: width),
+      elevation: 1,
+      child: Stack(
+        overflow: Overflow.visible,
+        children: <Widget>[
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Text(
-                userName,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: isMe
-                      ? Colors.black
-                      : Theme.of(context).accentTextTheme.headline6.color,
-                ),
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: <Widget>[
-                  isMe
-                      ? Text(
-                          DateFormat.Hm().format(createdAt.toDate()),
-                          style: TextStyle(
-                            color: isMe
-                                ? Colors.black
-                                : Theme.of(context)
-                                    .accentTextTheme
-                                    .headline6
-                                    .color,
-                            fontSize: 10,
-                          ),
-                        )
-                      : Container(),
-                  isMe ? Spacer() : Container(),
+              if (!count)
+                if (!isMe)
                   Text(
-                    message,
+                    userName,
                     style: TextStyle(
+                      fontWeight: FontWeight.bold,
                       color: isMe
                           ? Colors.black
                           : Theme.of(context).accentTextTheme.headline6.color,
                     ),
                   ),
-                  !isMe ? Spacer() : Container(),
-                  !isMe
-                      ? Text(
-                          DateFormat.Hm().format(createdAt.toDate()),
-                          style: TextStyle(
-                            color: isMe
-                                ? Colors.black
-                                : Theme.of(context)
-                                    .accentTextTheme
-                                    .headline6
-                                    .color,
-                            fontSize: 10,
-                          ),
-                        )
-                      : Container(),
+              if (!count)
+                SizedBox(
+                  height: 5,
+                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Flexible(
+                    child: Text(
+                      message + '      ',
+                      maxLines: 50,
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(
+                        color: isMe
+                            ? Colors.black
+                            : Theme.of(context).accentTextTheme.headline6.color,
+                      ),
+                      textAlign: TextAlign.start,
+                    ),
+                  ),
+                  SizedBox(
+                    width: width / 10,
+                  )
                 ],
               ),
             ],
           ),
-        ),
-        Positioned(
-          top: 3,
-          left: isMe ? null : 2 * width,
-          right: isMe ? width * 2 : null,
-          child: CircleAvatar(
-            backgroundImage: NetworkImage(
-              userImage,
+          Positioned(
+            right: 0,
+            bottom: 0,
+            child: Text(
+              DateFormat.Hm().format(createdAt.toDate()),
+              style: TextStyle(
+                color: isMe
+                    ? Colors.black
+                    : Theme.of(context).accentTextTheme.headline6.color,
+                fontSize: 10,
+              ),
+              softWrap: true,
             ),
-            radius: 15,
-          ),
-        ),
-      ],
-      overflow: Overflow.visible,
+          )
+        ],
+      ),
     );
   }
 }

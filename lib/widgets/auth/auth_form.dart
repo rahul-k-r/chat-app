@@ -7,9 +7,12 @@ import 'package:flutter_complete_guide/widgets/pickers/user_image_picker.dart';
 class AuthForm extends StatefulWidget {
   AuthForm(
     this.submitFn,
+    this.submitFn2,
     this.isLoading,
   );
-
+  final void Function(
+    BuildContext ctx,
+  ) submitFn2;
   final bool isLoading;
   final void Function(
     String email,
@@ -44,41 +47,77 @@ class _AuthFormState extends State<AuthForm> {
     _userImageFile = image;
   }
 
-  void _trySubmit() {
-    final isValid = _formKey.currentState.validate();
-    FocusScope.of(context).unfocus();
+  void _trySubmit(bool key) {
+    if (key) {
+      final isValid = _formKey.currentState.validate();
+      FocusScope.of(context).unfocus();
 
-    if (_userImageFile == null && !_isLogin) {
-      Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Please pick an image.'),
-          backgroundColor: Theme.of(context).errorColor,
-        ),
-      );
-      return;
-    }
+      if (_userImageFile == null && !_isLogin) {
+        Scaffold.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Please pick an image.'),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+        return;
+      }
 
-    if (isValid) {
-      _formKey.currentState.save();
-      widget.submitFn(
-        _userEmail.trim(),
-        _userPassword.trim(),
-        _userName.trim(),
-        _userImageFile,
-        _isLogin,
-        context,
-      );
-      _autoValidate = false;
+      if (isValid) {
+        _formKey.currentState.save();
+        widget.submitFn(
+          _userEmail.trim(),
+          _userPassword.trim(),
+          _userName.trim(),
+          _userImageFile,
+          _isLogin,
+          context,
+        );
+        _autoValidate = false;
+      } else {
+        _autoValidate = true;
+      }
     } else {
-      _autoValidate = true;
+      widget.submitFn2(context);
     }
+  }
+
+  Widget _signInButton() {
+    return RaisedButton(
+      color: Colors.white,
+      splashColor: Colors.grey,
+      onPressed: () => _trySubmit(false),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      // highlightElevation: 0,
+      // borderSide: BorderSide(color: Colors.grey),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image(
+                image: AssetImage("assets/images/google_logo.png"),
+                height: 20.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Text(
+                'Sign in with Google',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.grey[800],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Card(
-        margin: EdgeInsets.all(20),
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(16),
@@ -144,7 +183,7 @@ class _AuthFormState extends State<AuthForm> {
                   if (!widget.isLoading)
                     RaisedButton(
                       child: Text(_isLogin ? 'Login' : 'Signup'),
-                      onPressed: _trySubmit,
+                      onPressed: () => _trySubmit(true),
                     ),
                   if (!widget.isLoading)
                     FlatButton(
@@ -157,7 +196,19 @@ class _AuthFormState extends State<AuthForm> {
                           _isLogin = !_isLogin;
                         });
                       },
-                    )
+                    ),
+                  if (!widget.isLoading)
+                    Text(
+                      'or',
+                    ),
+                  if (!widget.isLoading)
+                    SizedBox(
+                      height: 3,
+                    ),
+                  if (!widget.isLoading) _signInButton(),
+                  SizedBox(
+                    height: 3,
+                  ),
                 ],
               ),
             ),

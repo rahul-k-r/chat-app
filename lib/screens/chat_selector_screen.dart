@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/widgets/chat/chat_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MainChatScreen extends StatefulWidget {
   @override
@@ -57,6 +58,7 @@ class _MainChatScreenState extends State<MainChatScreen> {
               onChanged: (itemValue) {
                 if (itemValue == 'logout') {
                   FirebaseAuth.instance.signOut();
+                  GoogleSignIn().signOut();
                 } else
                   setState(() {
                     item = itemValue;

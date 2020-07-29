@@ -11,7 +11,6 @@ class NewMessage extends StatefulWidget {
 class _NewMessageState extends State<NewMessage> {
   final _controller = new TextEditingController();
   var _enteredMessage = '';
-
   void _sendMessage() async {
     FocusScope.of(context).unfocus();
     final user = await FirebaseAuth.instance.currentUser();
@@ -22,28 +21,48 @@ class _NewMessageState extends State<NewMessage> {
         .orderBy('createdAt', descending: true)
         .limit(1);
     final snap = await lastMessage.getDocuments();
-    if (snap.documents.length == 0)
+    int _count;
+    if (snap.documents.length == 0) {
+      DateTime date = DateTime.now();
+      _count = 1;
+      print(date.timeZoneOffset);
       Firestore.instance.collection('chat').add({
         'text': 'timeStampMarker',
-        'createdAt': Timestamp.now(),
+        'count': _count,
+        'createdAt': Timestamp.fromDate(
+            DateTime.utc(date.year, date.month, date.day)
+                .subtract(date.timeZoneOffset)),
         'userId': user.uid,
         'username': userData['username'],
         'userImage': userData['image_url']
       });
-    else {
+    } else {
+      if (snap.documents[0]['text'] == 'timeStampMarker')
+        _count = 1;
+      else if (snap.documents[0]['userId'] == user.uid)
+        _count = snap.documents[0]['count'] + 1;
+      else
+        _count = 1;
       final timeLast = snap.documents[0]['createdAt'];
       if (DateFormat.yMd().format(timeLast.toDate()) !=
-          DateFormat.yMd().format(DateTime.now()))
+          DateFormat.yMd().format(DateTime.now())) {
+        DateTime date = DateTime.now();
+
         Firestore.instance.collection('chat').add({
           'text': 'timeStampMarker',
-          'createdAt': Timestamp.now(),
+          'count': _count,
+          'createdAt':
+              Timestamp.fromDate(DateTime.utc(date.year, date.month, date.day)),
           'userId': user.uid,
           'username': userData['username'],
           'userImage': userData['image_url']
         });
+      }
     }
+
     Firestore.instance.collection('chat').add({
-      'text': _enteredMessage,
+      'text': _enteredMessage.trim(),
+      'count': _count,
       'createdAt': Timestamp.now(),
       'userId': user.uid,
       'username': userData['username'],
