@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 
-import 'package:flutter_complete_guide/widgets/chat/messages.dart';
-import 'package:flutter_complete_guide/widgets/chat/new_message.dart';
+import '../widgets/chat/messages.dart';
+import '../widgets/chat/new_message.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {

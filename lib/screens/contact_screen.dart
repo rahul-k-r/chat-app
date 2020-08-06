@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_complete_guide/screens/chat_screen.dart';
+import '../screens/chat_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ContactScreen extends StatelessWidget {

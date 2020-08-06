@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:flutter_complete_guide/screens/auth_screen.dart';
-import 'package:flutter_complete_guide/screens/chat_selector_screen.dart';
-import 'package:flutter_complete_guide/screens/splash_screen.dart';
+import './screens/auth_screen.dart';
+import './screens/chat_selector_screen.dart';
+import './screens/splash_screen.dart';
 
 void main() => runApp(MyApp());
 
