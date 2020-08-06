@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/screens/contact_screen.dart';
 import 'package:flutter_complete_guide/widgets/chat/chat_selector.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class MainChatScreen extends StatefulWidget {
@@ -12,12 +13,16 @@ class MainChatScreen extends StatefulWidget {
 
 class _MainChatScreenState extends State<MainChatScreen> {
   var item = 'all';
-
+  var userId = '';
+  var chatId = '';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Chats'),
+        title: Text(
+          'Chats',
+          style: GoogleFonts.satisfy(fontWeight: FontWeight.bold),
+        ),
         actions: <Widget>[
           DropdownButton(
               underline: Container(),
@@ -76,11 +81,10 @@ class _MainChatScreenState extends State<MainChatScreen> {
               child: CircularProgressIndicator(),
             );
           }
+          userId = futureSnapshot.data.uid;
           return StreamBuilder(
             stream: Firestore.instance
-                .collection('chats')
-                .document(futureSnapshot.data.uid)
-                .collection('chat')
+                .collection('chats/$userId/chat')
                 .orderBy('modifiedAt', descending: true)
                 .snapshots(),
             builder: (ctx, chatSnapshot) {
@@ -116,7 +120,14 @@ class _MainChatScreenState extends State<MainChatScreen> {
                 child: ListView.builder(
                   itemBuilder: (ctx, chat) {
                     final deviceWidth = MediaQuery.of(ctx).size.width;
-                    return ChatSelector(70.0, deviceWidth);
+                    chatId = chatDocs[chat].documentID;
+                    return ChatSelector(
+                      70.0,
+                      deviceWidth,
+                      userId,
+                      chatId,
+                      chatDocs[chat],
+                    );
                   },
                   itemCount: chatDocs.length,
                 ),
@@ -130,7 +141,9 @@ class _MainChatScreenState extends State<MainChatScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ContactScreen(),
+              builder: (context) {
+                return ContactScreen(userId);
+              },
             ),
           );
         },

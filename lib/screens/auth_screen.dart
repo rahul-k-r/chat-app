@@ -8,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:flutter_complete_guide/widgets/auth/auth_form.dart';
-import 'package:network_to_file_image/network_to_file_image.dart';
 
 class AuthScreen extends StatefulWidget {
   @override

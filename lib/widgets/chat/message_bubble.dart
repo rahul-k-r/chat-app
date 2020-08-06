@@ -138,7 +138,7 @@ class MessageStack extends StatelessWidget {
                 children: <Widget>[
                   Flexible(
                     child: Text(
-                      message + '      ',
+                      message + '       \n',
                       maxLines: 50,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
@@ -149,9 +149,9 @@ class MessageStack extends StatelessWidget {
                       textAlign: TextAlign.start,
                     ),
                   ),
-                  SizedBox(
-                    width: width / 10,
-                  )
+                  // SizedBox(
+                  //   width: width / 2.5,
+                  // )
                 ],
               ),
             ],
@@ -159,15 +159,30 @@ class MessageStack extends StatelessWidget {
           Positioned(
             right: 0,
             bottom: 0,
-            child: Text(
-              DateFormat.Hm().format(createdAt.toDate()),
-              style: TextStyle(
-                color: isMe
-                    ? Colors.black
-                    : Theme.of(context).accentTextTheme.headline6.color,
-                fontSize: 10,
-              ),
-              softWrap: true,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                Text(
+                  DateFormat.Hm().format(createdAt.toDate()),
+                  style: TextStyle(
+                    color: isMe
+                        ? Colors.black
+                        : Theme.of(context).accentTextTheme.headline6.color,
+                    fontSize: 10,
+                  ),
+                  softWrap: true,
+                ),
+                // Align(
+                //   alignment: Alignment.topCenter,
+                //   child: Icon(
+                //     Icons.check,
+                //     color: isMe
+                //         ? Colors.black
+                //         : Theme.of(context).accentTextTheme.headline6.color,
+                //     size: 12,
+                //   ),
+                // )
+              ],
             ),
           )
         ],

@@ -1,13 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_complete_guide/screens/chat_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class ContactScreen extends StatelessWidget {
+  ContactScreen(this.userId);
+
+  final String userId;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Contacts'),
+        title: Text(
+          'Contacts',
+          style: GoogleFonts.satisfy(fontWeight: FontWeight.bold),
+        ),
       ),
       body: StreamBuilder(
         stream: Firestore.instance
@@ -33,6 +41,12 @@ class ContactScreen extends StatelessWidget {
           return ListView.builder(
             itemCount: chatDocs.length,
             itemBuilder: (ctx, itemIndex) {
+              if (chatDocs[itemIndex].documentID == userId) {
+                return Container(
+                  width: 0,
+                  height: 0,
+                );
+              }
               return InkWell(
                 child: Container(
                   width: deviceWidth,
@@ -59,7 +73,10 @@ class ContactScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatScreen(),
+                      builder: (context) => ChatScreen1(
+                        userId,
+                        chatDocs[itemIndex].documentID,
+                      ),
                     ),
                   );
                 },
