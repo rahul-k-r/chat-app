@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class NewMessage extends StatefulWidget {
-  final collection;
-  final uid;
+  final String collection;
+  final String uid;
   NewMessage(this.uid, this.collection);
   @override
   _NewMessageState createState() => _NewMessageState();
@@ -17,6 +17,35 @@ class _NewMessageState extends State<NewMessage> {
   final _controller = new TextEditingController();
   var _enteredMessage = '';
 
+  void _firebaseUpdateChat(
+    String user,
+    DocumentSnapshot userData,
+    String sentUser,
+    DocumentSnapshot sentUserData,
+    String message,
+  ) {
+    Firestore.instance
+        .collection('chats/$sentUser/chat')
+        .document(user)
+        .setData({
+      'image_url': userData['image_url'],
+      'modifiedAt': Timestamp.now(),
+      'username': userData['username'],
+      'lastMessage': message,
+      'isMine': false,
+    });
+    Firestore.instance
+        .collection('chats/$user/chat')
+        .document(sentUser)
+        .setData({
+      'image_url': sentUserData['image_url'],
+      'modifiedAt': Timestamp.now(),
+      'username': sentUserData['username'],
+      'lastMessage': message,
+      'isMine': true,
+    });
+  }
+
   void _firebaseAddData(
     String _copiedMessage,
     int _count,
@@ -24,13 +53,15 @@ class _NewMessageState extends State<NewMessage> {
     FirebaseUser user,
     DocumentSnapshot userData,
   ) async {
-    var id1 = 'chats/${widget.collection}/chat/${widget.uid}/messages';
-    var id2 = 'chats/${widget.uid}/chat/${widget.collection}/messages';
+    final sentUser = 'chats/${widget.collection}/chat';
+    final id1 = sentUser + '/${widget.uid}/messages';
+    final sender = 'chats/${widget.uid}/chat';
+    final id2 = sender + '/${widget.collection}/messages';
 
     var _message;
     if (widget.collection == 'chat')
       _message = await Firestore.instance.collection('chat').add({
-        'text': _copiedMessage.trim(),
+        'text': _copiedMessage,
         'count': _count,
         'createdAt': createdAt,
         'userId': user.uid,
@@ -46,7 +77,7 @@ class _NewMessageState extends State<NewMessage> {
       });
     else {
       _message = await Firestore.instance.collection(id1).add({
-        'text': _copiedMessage.trim(),
+        'text': _copiedMessage,
         'count': _count,
         'createdAt': createdAt,
         'userId': user.uid,
@@ -60,11 +91,12 @@ class _NewMessageState extends State<NewMessage> {
           }
         ]
       });
+
       await Firestore.instance
           .collection(id2)
           .document(_message.documentID)
           .setData({
-        'text': _copiedMessage.trim(),
+        'text': _copiedMessage,
         'count': _count,
         'createdAt': createdAt,
         'userId': user.uid,
@@ -79,7 +111,6 @@ class _NewMessageState extends State<NewMessage> {
         ]
       });
     }
-    print(_message.documentID);
     _message.updateData({'sent': true});
   }
 
@@ -102,7 +133,7 @@ class _NewMessageState extends State<NewMessage> {
   }
 
   void _sendMessage() async {
-    final _copiedMessage = _enteredMessage;
+    final _copiedMessage = _enteredMessage.trim();
     setState(() {
       _enteredMessage = '';
     });
@@ -110,6 +141,12 @@ class _NewMessageState extends State<NewMessage> {
       final user = await FirebaseAuth.instance.currentUser();
       final userData =
           await Firestore.instance.collection('users').document(user.uid).get();
+      DocumentSnapshot sentUserData;
+      if (widget.collection != 'chat')
+        sentUserData = await Firestore.instance
+            .collection('users')
+            .document(widget.collection)
+            .get();
       var lastMessage;
       if (widget.collection == 'chat')
         lastMessage = Firestore.instance
@@ -138,6 +175,7 @@ class _NewMessageState extends State<NewMessage> {
         if (DateFormat.yMd().format(timeLast.toDate()) !=
             DateFormat.yMd().format(DateTime.now())) {
           _timeStampMarker(user, userData);
+          _count = 1;
         }
       }
 
@@ -148,6 +186,14 @@ class _NewMessageState extends State<NewMessage> {
         user,
         userData,
       );
+      if (widget.collection != 'chat')
+        _firebaseUpdateChat(
+          user.uid,
+          userData,
+          widget.collection,
+          sentUserData,
+          _copiedMessage,
+        );
     }
   }
 
@@ -163,7 +209,7 @@ class _NewMessageState extends State<NewMessage> {
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.all(const Radius.circular(30.0)),
-                color: Colors.white,
+                color: Theme.of(context).backgroundColor,
               ),
               child: Row(
                 children: <Widget>[
@@ -171,7 +217,10 @@ class _NewMessageState extends State<NewMessage> {
                     padding: const EdgeInsets.all(0.0),
                     // disabledColor: iconColor,
                     // color: iconColor,
-                    icon: Icon(Icons.insert_emoticon),
+                    icon: Icon(
+                      Icons.insert_emoticon,
+                      color: Theme.of(context).textTheme.bodyText2.color,
+                    ),
                     onPressed: () {},
                   ),
                   Flexible(
@@ -184,8 +233,8 @@ class _NewMessageState extends State<NewMessage> {
                         contentPadding: const EdgeInsets.all(0.0),
                         hintText: 'Type a message...',
                         hintStyle: TextStyle(
-                          // color: textFieldHintColor,
                           fontSize: 16.0,
+                          color: Theme.of(context).textTheme.bodyText2.color,
                         ),
                         counterText: '',
                       ),
@@ -212,13 +261,19 @@ class _NewMessageState extends State<NewMessage> {
                   ),
                   IconButton(
                     // color: iconColor,
-                    icon: Icon(Icons.attach_file),
+                    icon: Icon(
+                      Icons.attach_file,
+                      color: Theme.of(context).textTheme.bodyText2.color,
+                    ),
                     onPressed: () {},
                   ),
                   _enteredMessage.isEmpty || _enteredMessage == null
                       ? IconButton(
                           // color: iconColor,
-                          icon: Icon(Icons.camera_alt),
+                          icon: Icon(
+                            Icons.camera_alt,
+                            color: Theme.of(context).textTheme.bodyText2.color,
+                          ),
                           onPressed: () {},
                         )
                       : Container(),

@@ -11,7 +11,8 @@ class MessageBubble extends StatelessWidget {
     this.isMe,
     this.createdAt,
     this.width,
-    this.count, {
+    this.count,
+    this.isGroup, {
     this.key,
   });
 
@@ -23,6 +24,7 @@ class MessageBubble extends StatelessWidget {
   final double width;
   final bool isMe;
   final bool count;
+  final bool isGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +39,9 @@ class MessageBubble extends StatelessWidget {
               createdAt: createdAt,
               message: message,
               userImage: userImage,
-              count: count),
+              count: count,
+              isGroup: isGroup,
+            ),
     );
   }
 }
@@ -67,16 +71,19 @@ class TimeStampDenoter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Bubble(
       margin: BubbleEdges.only(
         top: 10,
       ),
       alignment: Alignment.center,
-      color: Color.fromRGBO(212, 234, 244, 1.0),
+      color: isDark
+          ? Color.fromRGBO(212, 234, 244, 0.87)
+          : Color.fromRGBO(212, 234, 244, 1.0),
       child: Text(
         _valueShown(),
         textAlign: TextAlign.center,
-        style: TextStyle(fontSize: 11.0),
+        style: TextStyle(fontSize: 11.0, color: Colors.grey[900]),
       ),
     );
   }
@@ -92,6 +99,7 @@ class MessageStack extends StatelessWidget {
     @required this.message,
     @required this.userImage,
     @required this.count,
+    @required this.isGroup,
   }) : super(key: key);
 
   final bool isMe;
@@ -101,11 +109,14 @@ class MessageStack extends StatelessWidget {
   final String message;
   final String userImage;
   final bool count;
+  final bool isGroup;
 
   @override
   Widget build(BuildContext context) {
     return Bubble(
-      color: isMe ? Colors.grey[300] : Theme.of(context).accentColor,
+      color: isMe
+          ? Theme.of(context).backgroundColor
+          : Theme.of(context).accentColor,
       alignment: isMe ? Alignment.topRight : Alignment.topLeft,
       nip: count ? BubbleNip.no : isMe ? BubbleNip.rightTop : BubbleNip.leftTop,
       margin: isMe
@@ -118,21 +129,21 @@ class MessageStack extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              if (!count)
-                if (!isMe)
-                  Text(
-                    userName,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: isMe
-                          ? Colors.black
-                          : Theme.of(context).accentTextTheme.headline6.color,
+              if (isGroup)
+                if (!count)
+                  if (!isMe)
+                    Text(
+                      userName,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.bodyText1.color,
+                      ),
                     ),
+              if (isGroup)
+                if (!count)
+                  SizedBox(
+                    height: 5,
                   ),
-              if (!count)
-                SizedBox(
-                  height: 5,
-                ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
@@ -143,8 +154,8 @@ class MessageStack extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                         color: isMe
-                            ? Colors.black
-                            : Theme.of(context).accentTextTheme.headline6.color,
+                            ? Theme.of(context).textTheme.bodyText2.color
+                            : Theme.of(context).textTheme.bodyText1.color,
                       ),
                       textAlign: TextAlign.start,
                     ),
@@ -166,8 +177,8 @@ class MessageStack extends StatelessWidget {
                   DateFormat.Hm().format(createdAt.toDate()),
                   style: TextStyle(
                     color: isMe
-                        ? Colors.black
-                        : Theme.of(context).accentTextTheme.headline6.color,
+                        ? Theme.of(context).textTheme.bodyText2.color
+                        : Theme.of(context).textTheme.bodyText1.color,
                     fontSize: 10,
                   ),
                   softWrap: true,
@@ -178,7 +189,7 @@ class MessageStack extends StatelessWidget {
                 //     Icons.check,
                 //     color: isMe
                 //         ? Colors.black
-                //         : Theme.of(context).accentTextTheme.headline6.color,
+                //         : Theme.of(context).textTheme.bodyText2.color,
                 //     size: 12,
                 //   ),
                 // )

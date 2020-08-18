@@ -73,10 +73,10 @@ class ContactScreen extends StatelessWidget {
                   Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => ChatScreen1(
-                        userId,
-                        chatDocs[itemIndex].documentID,
-                      ),
+                      builder: (context) => ChatScreen(
+                          userId,
+                          chatDocs[itemIndex].documentID,
+                          chatDocs[itemIndex]['username']),
                     ),
                   );
                 },

@@ -25,6 +25,7 @@ class _MainChatScreenState extends State<MainChatScreen> {
         ),
         actions: <Widget>[
           DropdownButton(
+              dropdownColor: Theme.of(context).backgroundColor,
               underline: Container(),
               icon: Icon(
                 Icons.more_vert,

@@ -92,7 +92,7 @@ class ChatSelector extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ChatScreen(chatId),
+            builder: (context) => GroupChatScreen(chatId, 'GroupChat'),
           ),
         );
       },

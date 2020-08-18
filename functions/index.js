@@ -6,7 +6,7 @@ admin.initializeApp();
 exports.myFunction = functions.firestore
   .document('chat/{message}')
   .onCreate((snapshot, context) => {
-    return admin.messaging().sendToTopic('chat', {
+    return snapshot.data().text==='timeStampMarker'?null:admin.messaging().sendToTopic('chat', {
       notification: {
         title: snapshot.data().username,
         body: snapshot.data().text,

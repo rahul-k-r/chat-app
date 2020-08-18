@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../pickers/user_image_picker.dart';
 
@@ -83,7 +84,7 @@ class _AuthFormState extends State<AuthForm> {
 
   Widget _signInButton() {
     return RaisedButton(
-      color: Colors.white,
+      color: Theme.of(context).backgroundColor,
       splashColor: Colors.grey,
       onPressed: () => _trySubmit(false),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
@@ -102,9 +103,9 @@ class _AuthFormState extends State<AuthForm> {
               padding: const EdgeInsets.only(left: 10),
               child: Text(
                 'Sign in with Google',
-                style: TextStyle(
+                style: GoogleFonts.raleway(
                   fontSize: 15,
-                  color: Colors.grey[800],
+                  color: Theme.of(context).textTheme.headline6.color,
                 ),
               ),
             )
@@ -118,6 +119,7 @@ class _AuthFormState extends State<AuthForm> {
   Widget build(BuildContext context) {
     return Center(
       child: Card(
+        color: Theme.of(context).backgroundColor,
         child: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.all(16),
@@ -141,6 +143,12 @@ class _AuthFormState extends State<AuthForm> {
                     },
                     keyboardType: TextInputType.emailAddress,
                     decoration: InputDecoration(
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                      ),
+                      labelStyle: TextStyle(
+                        color: Theme.of(context).textTheme.headline6.color,
+                      ),
                       labelText: 'Email address',
                     ),
                     onSaved: (value) {
@@ -159,7 +167,14 @@ class _AuthFormState extends State<AuthForm> {
                         }
                         return null;
                       },
-                      decoration: InputDecoration(labelText: 'Username'),
+                      decoration: InputDecoration(
+                          hintStyle: TextStyle(
+                            color: Theme.of(context).primaryColor,
+                          ),
+                          labelStyle: TextStyle(
+                            color: Theme.of(context).textTheme.headline6.color,
+                          ),
+                          labelText: 'Username'),
                       onSaved: (value) {
                         _userName = value;
                       },
@@ -172,7 +187,14 @@ class _AuthFormState extends State<AuthForm> {
                       }
                       return null;
                     },
-                    decoration: InputDecoration(labelText: 'Password'),
+                    decoration: InputDecoration(
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                        ),
+                        labelStyle: TextStyle(
+                          color: Theme.of(context).textTheme.headline6.color,
+                        ),
+                        labelText: 'Password'),
                     obscureText: true,
                     onSaved: (value) {
                       _userPassword = value;

@@ -5,15 +5,16 @@ import '../widgets/chat/messages.dart';
 import '../widgets/chat/new_message.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ChatScreen extends StatefulWidget {
+class GroupChatScreen extends StatefulWidget {
   final chatId;
+  final groupName;
 
-  ChatScreen(this.chatId);
+  GroupChatScreen(this.chatId, this.groupName);
   @override
-  _ChatScreenState createState() => _ChatScreenState();
+  _GroupChatScreenState createState() => _GroupChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _GroupChatScreenState extends State<GroupChatScreen> {
   @override
   void initState() {
     super.initState();
@@ -37,7 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'GroupChat',
+          widget.groupName,
           style: GoogleFonts.satisfy(fontWeight: FontWeight.bold),
         ),
         actions: [],
@@ -46,7 +47,7 @@ class _ChatScreenState extends State<ChatScreen> {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: Messages(widget.chatId),
+              child: Messages(widget.chatId, true),
             ),
             NewMessage('lol', 'chat'),
           ],
@@ -56,31 +57,19 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 }
 
-class ChatScreen1 extends StatefulWidget {
+class ChatScreen extends StatefulWidget {
   final uid;
   final chatId;
-  ChatScreen1(this.uid, this.chatId);
+  final username;
+  ChatScreen(this.uid, this.chatId, this.username);
   @override
-  _ChatScreen1State createState() => _ChatScreen1State();
+  _ChatScreenState createState() => _ChatScreenState();
 }
 
-class _ChatScreen1State extends State<ChatScreen1> {
+class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // final fbm = FirebaseMessaging();
-    // fbm.requestNotificationPermissions();
-    // fbm.configure(onMessage: (msg) {
-    //   if (msg['notification']['body'] != 'timeStampMarker') print(msg);
-    //   return;
-    // }, onLaunch: (msg) {
-    //   if (msg['notification']['body'] != 'timeStampMarker') print(msg);
-    //   return;
-    // }, onResume: (msg) {
-    //   if (msg['notification']['body'] != 'timeStampMarker') print(msg);
-    //   return;
-    // });
-    // fbm.subscribeToTopic('chats/${widget.uid}/chat/${widget.chatId}/messages');
   }
 
   @override
@@ -88,7 +77,7 @@ class _ChatScreen1State extends State<ChatScreen1> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'GroupChat',
+          widget.username,
           style: GoogleFonts.satisfy(fontWeight: FontWeight.bold),
         ),
         actions: [],
@@ -97,7 +86,7 @@ class _ChatScreen1State extends State<ChatScreen1> {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: Messages1(widget.chatId),
+              child: Messages(widget.chatId, false),
             ),
             NewMessage(widget.uid, widget.chatId),
           ],
