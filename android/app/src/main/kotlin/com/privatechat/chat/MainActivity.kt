@@ -1,4 +1,4 @@
-package com.private_chat.chat_app
+package com.privatechat.chat
 
 import io.flutter.embedding.android.FlutterActivity
 

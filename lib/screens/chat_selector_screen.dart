@@ -1,10 +1,12 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 import '../screens/contact_screen.dart';
 import '../widgets/chat/chat_selector.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class MainChatScreen extends StatefulWidget {
   @override
@@ -106,8 +108,12 @@ class _MainChatScreenState extends State<MainChatScreen> {
                         text: "No chats...To start press the ",
                       ),
                       WidgetSpan(
-                          child: Icon(Icons.message),
-                          alignment: PlaceholderAlignment.middle),
+                        child: Icon(
+                          Icons.message,
+                          color: Theme.of(context).textTheme.headline6.color,
+                        ),
+                        alignment: PlaceholderAlignment.middle,
+                      ),
                       TextSpan(
                         style: TextStyle(
                             fontSize: 14,

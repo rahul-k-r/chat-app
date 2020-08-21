@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:private_chat_app/colors/color.dart';
+
+import './colors/color.dart';
 
 import './screens/auth_screen.dart';
 import './screens/chat_selector_screen.dart';

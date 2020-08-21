@@ -1,50 +1,43 @@
 {
   "project_info": {
-    "project_number": "80897515461",
-    "firebase_url": "https://chat-app-47436.firebaseio.com",
-    "project_id": "chat-app-47436",
-    "storage_bucket": "chat-app-47436.appspot.com"
+    "project_number": "1098192324129",
+    "firebase_url": "https://chat-app-389aa.firebaseio.com",
+    "project_id": "chat-app-389aa",
+    "storage_bucket": "chat-app-389aa.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:80897515461:android:d0fc0541420311e01635ac",
+        "mobilesdk_app_id": "1:1098192324129:android:b081eb3340ab36ff4e8560",
         "android_client_info": {
-          "package_name": "com.private_chat.chat_app"
+          "package_name": "com.privatechat.chat"
         }
       },
       "oauth_client": [
         {
-          "client_id": "80897515461-fsedl9jflco86chu0gmfsv6pirbq5qsj.apps.googleusercontent.com",
+          "client_id": "1098192324129-kj25o2lh0nqo8ap4n503upqrkc5ro0d3.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.private_chat.chat_app",
+            "package_name": "com.privatechat.chat",
             "certificate_hash": "81062e15cfad27c53857c6c5a2d451f9ecb8cfbd"
           }
         },
         {
-          "client_id": "80897515461-f6tj67gdhfaveqhvap2e4mifk6ats3an.apps.googleusercontent.com",
+          "client_id": "1098192324129-gh5lc38hdqf1t1rljoo4ldff83l2b131.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBT9ZWbaT3yiWvsuiyKjSyXs08Z16aEwu8"
+          "current_key": "AIzaSyAwkrjlzvgQlTryL45ZDvcKkb49cy7hVvY"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "80897515461-f6tj67gdhfaveqhvap2e4mifk6ats3an.apps.googleusercontent.com",
+              "client_id": "1098192324129-gh5lc38hdqf1t1rljoo4ldff83l2b131.apps.googleusercontent.com",
               "client_type": 3
-            },
-            {
-              "client_id": "80897515461-4cfiitboulpi77ee3r6o7uaanqfau3n6.apps.googleusercontent.com",
-              "client_type": 2,
-              "ios_info": {
-                "bundle_id": "com.privateapp.chatapp"
-              }
             }
           ]
         }

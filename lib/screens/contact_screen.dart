@@ -1,7 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import '../screens/chat_screen.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../screens/chat_screen.dart';
 
 class ContactScreen extends StatelessWidget {
   ContactScreen(this.userId);
@@ -31,10 +33,12 @@ class ContactScreen extends StatelessWidget {
             );
           }
           final chatDocs = streamSnapshot.data.documents;
-          if (chatDocs.length == 0)
+          if (chatDocs.length == 1 && chatDocs[0].documentID == userId)
             return Center(
               child: Text(
                 'No contacts found',
+                style: TextStyle(
+                    color: Theme.of(context).textTheme.headline6.color),
               ),
             );
           final deviceWidth = MediaQuery.of(ctx).size.width;

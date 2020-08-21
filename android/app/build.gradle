@@ -44,7 +44,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.private_chat.chat_app"
+        applicationId "com.privatechat.chat"
         minSdkVersion 16
         targetSdkVersion 29
         versionCode flutterVersionCode.toInteger()

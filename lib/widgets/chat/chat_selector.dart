@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import '../../screens/chat_screen.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 import 'package:intl/intl.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../../screens/chat_screen.dart';
 
 class ChatSelector extends StatelessWidget {
   final double width;
